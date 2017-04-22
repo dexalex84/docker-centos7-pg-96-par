@@ -62,15 +62,20 @@ __inst_pglogical() {
  echo update postgresql.conf to use logical replication
  sed -i -e 's/#max_wal_senders = 0/max_worker_processes = 10/g' ${POSTGRESQL_CONF_PATH}
  sed -i -e 's/#max_replication_slots = 0/max_replication_slots = 10/g' ${POSTGRESQL_CONF_PATH}
- sed -i -e 's/#wal_level = minimal = 0/wal_level = \x27logical\x27/g' ${POSTGRESQL_CONF_PATH}
+ sed -i -e 's/#wal_level = minimal/wal_level = logical/g' ${POSTGRESQL_CONF_PATH}
  sed -i -e 's/#max_worker_processes = 8/max_worker_processes = 10/g' ${POSTGRESQL_CONF_PATH}
  sed -i -e 's/#shared_preload_libraries = \x27\x27/shared_preload_libraries = \x27pglogical\x27/g' ${POSTGRESQL_CONF_PATH}
  sed -i -e 's/#track_commit_timestamp = off/track_commit_timestamp = on/g' ${POSTGRESQL_CONF_PATH}
+
+ echo #set params to pglogical replication plugin >>  ${POSTGRESQL_CONF_PATH}
+ echo max_wal_senders = 10 >>  ${POSTGRESQL_CONF_PATH}
 
  echo enable replication in pg_hba.conf
  echo local   replication     postgres                                trust >> ${PG_HBA_CONF_PATH}
  echo host    replication     postgres        127.0.0.1/32            trust >> ${PG_HBA_CONF_PATH}
  echo host    replication     postgres        ::1/128                 trust >> ${PG_HBA_CONF_PATH}
+ echo host    replication     postgres        samenet                 trust >> ${PG_HBA_CONF_PATH}
+
 
 }
 
